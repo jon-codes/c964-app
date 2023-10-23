@@ -1,0 +1,32 @@
+{
+  "root": true,
+  "env": { "node": true, "es2020": true },
+  "extends": [
+    "eslint:recommended",
+    "plugin:import/recommended",
+    "plugin:@typescript-eslint/recommended"
+  ],
+  "ignorePatterns": ["dist"],
+  "parser": "@typescript-eslint/parser",
+  "plugins": ["simple-import-sort"],
+  "rules": {
+    "simple-import-sort/imports": "error",
+    "simple-import-sort/exports": "error"
+  },
+  "overrides": [
+    {
+      "files": ["src/*"],
+      "env": { "browser": false, "node": false, "es2020": true },
+      "settings": { "react": { "pragma": "h", "version": "16.0" } },
+      "extends": [
+        "plugin:react/recommended",
+        "plugin:react-hooks/recommended",
+        "plugin:jsx-a11y/strict",
+        "plugin:compat/recommended"
+      ],
+      "rules": {
+        "react/react-in-jsx-scope": "off"
+      }
+    }
+  ]
+}

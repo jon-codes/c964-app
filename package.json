@@ -1,0 +1,43 @@
+{
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite -c $npm_package_config_vite_config",
+    "build": "tsc -p $npm_package_config_ts_config && vite build -c $npm_package_config_vite_config",
+    "preview": "vite preview -c $npm_package_config_vite_config",
+    "lint": "eslint ./client",
+    "lint:fix": "eslint ./client --fix",
+    "format": "prettier ./client --check",
+    "format:fix": "prettier ./client --write"
+  },
+  "dependencies": {
+    "@hookform/resolvers": "^3.3.2",
+    "preact": "^10.13.1",
+    "preact-router": "^4.1.2",
+    "react-hook-form": "^7.47.0",
+    "zod": "^3.22.4"
+  },
+  "devDependencies": {
+    "@preact/preset-vite": "^2.5.0",
+    "@types/node": "^20.8.7",
+    "@typescript-eslint/eslint-plugin": "^6.8.0",
+    "@typescript-eslint/parser": "^6.8.0",
+    "eslint": "^8.52.0",
+    "eslint-plugin-compat": "^4.2.0",
+    "eslint-plugin-import": "^2.28.1",
+    "eslint-plugin-jsx-a11y": "^6.7.1",
+    "eslint-plugin-react": "^7.33.2",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-simple-import-sort": "^10.0.0",
+    "prettier": "^3.0.3",
+    "typescript": "^5.2.2",
+    "vite": "^4.3.2"
+  },
+  "browserslist": [
+    ">=0.2% in US, not dead"
+  ],
+  "config": {
+    "vite_config": "client/vite.config.ts",
+    "ts_config": "client/tsconfig.json"
+  }
+}
