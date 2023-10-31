@@ -1,58 +1,36 @@
 import "./styles.css";
 
-import { zodResolver } from "@hookform/resolvers/zod";
+import { createSyncStoragePersister } from "@tanstack/query-sync-storage-persister";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { persistQueryClient } from "@tanstack/react-query-persist-client";
 import { render } from "preact";
-import { useForm } from "react-hook-form";
-import * as z from "zod";
 
-const schema = z.object({});
+import App from "./App";
+import { LocationProvider } from "./context/locationContext";
 
-export function App() {
-  const {
-    register,
-    handleSubmit,
-    // formState: { errors },
-  } = useForm({ resolver: zodResolver(schema) });
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      gcTime: 1000 * 60 * 60 * 24, // 24 hours
+      staleTime: Infinity,
+    },
+  },
+});
 
-  return (
-    <>
-      <h1>🏠 Energy Forecast</h1>
-      <nav>
-        <ul>
-          <li>
-            <a className="current" href="/new">
-              New
-            </a>
-          </li>
-          <li>
-            <a className="current" href="/new">
-              New
-            </a>
-          </li>
-          <li>
-            <a className="current" href="/new">
-              New
-            </a>
-          </li>
-        </ul>
-      </nav>
-      <form onSubmit={handleSubmit((data) => console.log(data))}>
-        <label>
-          CDD65
-          <div>
-            <input {...register("CDD65")} />
-          </div>
-        </label>
-        <label>
-          HDD65
-          <div>
-            <input {...register("HDD65")} />
-          </div>
-        </label>
-        <button>Submit</button>
-      </form>
-    </>
-  );
-}
+const localStoragePersister = createSyncStoragePersister({
+  storage: window.localStorage,
+});
 
-render(<App />, document.getElementById("app")!);
+persistQueryClient({
+  queryClient,
+  persister: localStoragePersister,
+});
+
+render(
+  <QueryClientProvider client={queryClient}>
+    <LocationProvider>
+      <App />
+    </LocationProvider>
+  </QueryClientProvider>,
+  document.body,
+);
