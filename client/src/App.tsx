@@ -1,7 +1,7 @@
 import { useEffect, useState } from "preact/hooks";
 
 import ApplianceForm from "./ApplianceForm";
-import { useLocationContext } from "./context/locationContext";
+import { useLocationContext } from "./context/LocationContext";
 import HomeForm from "./HomeForm";
 import HouseholdForm from "./HouseholdForm";
 import HvacForm from "./HvacForm";

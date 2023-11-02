@@ -3,7 +3,7 @@ import { useEffect, useState } from "preact/hooks";
 
 import Input from "./components/Input";
 import LoadingIndicator from "./components/LoadingIndicator";
-import { useLocationContext } from "./context/locationContext";
+import { useLocationContext } from "./context/LocationContext";
 import useDebounce from "./hooks/useDebounce";
 import { getForwardGeocode } from "./libs/api";
 import { GeocodeItem } from "./libs/api/types";

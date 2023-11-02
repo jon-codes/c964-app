@@ -10,7 +10,7 @@ __pycache__/
 .Python
 build/
 develop-eggs/
-dist/
+# dist/
 downloads/
 eggs/
 .eggs/
@@ -171,8 +171,8 @@ lerna-debug.log*
 node_modules
 
 # Vite
-dist
-dist-ssr
+# dist
+# dist-ssr
 *.local
 
 # Editor directories and files

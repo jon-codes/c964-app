@@ -6,7 +6,7 @@ import { persistQueryClient } from "@tanstack/react-query-persist-client";
 import { render } from "preact";
 
 import App from "./App";
-import { LocationProvider } from "./context/locationContext";
+import { LocationProvider } from "./context/LocationContext";
 
 const queryClient = new QueryClient({
   defaultOptions: {
