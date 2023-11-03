@@ -10,21 +10,15 @@ def create_app():
     # create and configure the app
     app = Flask(
         __name__,
-        instance_relative_config=True,
         static_folder=os.path.join(dirname, "..", "client", "dist"),
         static_url_path="/",
     )
-    app.config.from_mapping(CACHE_DB=os.path.join(app.instance_path, "cache.sqlite"))
+    app.app_context().push()
+
     app.config.from_prefixed_env()
 
     # don't require strict slashes
     app.url_map.strict_slashes = False
-
-    # create instance folder if it doesn't exist
-    try:
-        os.makedirs(app.instance_path)
-    except OSError:
-        pass
 
     # create and register error handler
     def handle_exception(e):

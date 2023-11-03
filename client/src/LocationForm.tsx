@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { useEffect, useState } from "preact/hooks";
+import { useState } from "preact/hooks";
 
 import Input from "./components/Input";
 import LoadingIndicator from "./components/LoadingIndicator";
@@ -149,10 +149,6 @@ function LocationForm() {
         ? "Fetching climate data"
         : "Fetching location data"
       : null;
-
-  useEffect(() => {
-    console.log(geo, loadingMessage, dataErrorMessage);
-  }, [geo, loadingMessage, dataErrorMessage]);
 
   return (
     <form

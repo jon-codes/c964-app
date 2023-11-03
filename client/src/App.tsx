@@ -1,4 +1,4 @@
-import { useEffect, useState } from "preact/hooks";
+import { useState } from "preact/hooks";
 
 import ApplianceForm from "./ApplianceForm";
 import { useLocationContext } from "./context/LocationContext";
@@ -26,10 +26,6 @@ function App() {
 
   const [step, setStep] = useState<Step>("home");
   const [predictBody, setPredictBody] = useState<Partial<PredictBody>>({});
-
-  useEffect(() => {
-    predictBody && console.log(predictBody);
-  }, [predictBody]);
 
   const proceed = (step: Step, partialBody: Partial<PredictBody>) => {
     setStep(step);

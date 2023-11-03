@@ -1,9 +1,26 @@
 from flask import Blueprint, abort, request, current_app
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
 
 from marshmallow import Schema, fields, validate, ValidationError
 from server.cache import get_cache
 
 bp = Blueprint("geocode", __name__, url_prefix="/api/geocode")
+
+global_limiter = Limiter(
+    lambda: "global",
+    app=current_app,
+    storage_uri=current_app.config["REDIS_URL"],
+    storage_options={"socket_connect_timeout": 30},
+    strategy="fixed-window",
+)
+ip_limiter = Limiter(
+    get_remote_address,
+    app=current_app,
+    storage_uri=current_app.config["REDIS_URL"],
+    storage_options={"socket_connect_timeout": 30},
+    strategy="fixed-window",
+)
 
 
 class GeocodeParamsSchema(Schema):
@@ -37,6 +54,8 @@ def format_result(result):
 
 
 @bp.route("/", methods=["GET"])
+@global_limiter.limit("2000 per day")
+@ip_limiter.limit("25 per minute")
 def api_geocode():
     try:
         params = GeocodeParamsSchema().load(request.args)
