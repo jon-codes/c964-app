@@ -3,10 +3,17 @@ import os
 from flask import Flask, json
 from werkzeug.exceptions import HTTPException
 
+dirname = os.path.dirname(__file__)
+
 
 def create_app():
     # create and configure the app
-    app = Flask(__name__, instance_relative_config=True)
+    app = Flask(
+        __name__,
+        instance_relative_config=True,
+        static_folder=os.path.join(dirname, "..", "client", "dist"),
+        static_url_path="/",
+    )
     app.config.from_mapping(CACHE_DB=os.path.join(app.instance_path, "cache.sqlite"))
     app.config.from_prefixed_env()
 
@@ -36,6 +43,11 @@ def create_app():
         return response
 
     app.register_error_handler(HTTPException, handle_exception)
+
+    @app.route("/", defaults={"path": ""})
+    @app.route("/<path:path>")
+    def catch_all(path):
+        return app.send_static_file("index.html")
 
     # register blueprints
     from . import cache

@@ -2,7 +2,7 @@ from flask import Blueprint, abort, request
 
 from timezonefinder import TimezoneFinder
 from marshmallow import Schema, fields, validate, ValidationError
-from api.cache import get_cache
+from server.cache import get_cache
 
 bp = Blueprint("climate", __name__, url_prefix="/api/climate")
 

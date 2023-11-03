@@ -1,7 +1,7 @@
 from flask import Blueprint, abort, request, current_app
 
 from marshmallow import Schema, fields, validate, ValidationError
-from api.cache import get_cache
+from server.cache import get_cache
 
 bp = Blueprint("geocode", __name__, url_prefix="/api/geocode")
 
