@@ -1,26 +1,16 @@
 from flask import Blueprint, abort, request, current_app
-from flask_limiter import Limiter
-from flask_limiter.util import get_remote_address
 
 from marshmallow import Schema, fields, validate, ValidationError
+from limits import parse
+from requests import Request
+
 from server.cache import get_cache
+from server.limit import get_limiter
 
 bp = Blueprint("geocode", __name__, url_prefix="/api/geocode")
 
-global_limiter = Limiter(
-    lambda: "global",
-    app=current_app,
-    storage_uri=current_app.config["REDIS_URL"],
-    storage_options={"socket_connect_timeout": 30},
-    strategy="fixed-window",
-)
-ip_limiter = Limiter(
-    get_remote_address,
-    app=current_app,
-    storage_uri=current_app.config["REDIS_URL"],
-    storage_options={"socket_connect_timeout": 30},
-    strategy="fixed-window",
-)
+global_limit = parse("2000 per day")
+user_limit = parse("1000 per minute")
 
 
 class GeocodeParamsSchema(Schema):
@@ -54,8 +44,6 @@ def format_result(result):
 
 
 @bp.route("/", methods=["GET"])
-@global_limiter.limit("2000 per day")
-@ip_limiter.limit("25 per minute")
 def api_geocode():
     try:
         params = GeocodeParamsSchema().load(request.args)
@@ -76,9 +64,21 @@ def api_geocode():
         "key": current_app.config["OPENCAGE_KEY"],
     }
 
-    res = get_cache().get(
-        "https://api.opencagedata.com/geocode/v1/json", params=payload
-    )
+    # Prepare the request and check whether it's in the cache
+    req = Request("GET", "https://api.opencagedata.com/geocode/v1/json", params=payload)
+    session = get_cache()
+    hit = session.cache.contains(request=req)
+
+    if not hit:
+        # Check and consume rate limits
+        at_global_limit = get_limiter().test(global_limit, "global")
+        at_user_limit = get_limiter().test(user_limit, "user", request.remote_addr)
+
+        print(at_global_limit, at_user_limit)
+        # if at_global_limit or at_user_limit:
+        #     abort(429)
+
+    res = session.send(req.prepare())
     res.raise_for_status()
 
     results = res.json()

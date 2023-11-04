@@ -1,11 +1,13 @@
 from requests_cache import CachedSession, RedisCache
-from redis import Redis
-from flask import current_app, g
+
+from flask import g
+
+from server.redis import get_redis
 
 
 def get_cache():
     if "requests_cache" not in g:
-        connection = Redis.from_url(current_app.config["REDIS_URL"])
+        connection = get_redis()
         backend = RedisCache(connection=connection)
         g.requests_cache = CachedSession("http_cache", backend=backend)
     return g.requests_cache

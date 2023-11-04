@@ -44,12 +44,14 @@ def create_app():
         return app.send_static_file("index.html")
 
     # register blueprints
+    from . import redis
     from . import cache
     from . import healthcheck
     from . import geocode
     from . import climate
     from . import predict
 
+    redis.init_app(app)
     cache.init_app(app)
 
     app.register_blueprint(healthcheck.bp)
