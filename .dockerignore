@@ -17,6 +17,7 @@ pip-delete-this-directory.txt
 instance/
 .editorconfig
 .flaskenv
+README.md
 
 # Byte-compiled / optimized / DLL files
 **/__pycache__/
